@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#07111f" />
+    <title>灵听 · 环境声感知 Demo</title>
+  </head>
+  <body>
+    <div class="noise"></div>
+    <main class="shell">
+      <header class="topbar">
+        <div class="brand">
+          <div class="brand-mark" aria-hidden="true"><span></span><span></span><span></span></div>
+          <div>
+            <p class="eyebrow">LINGTING / ACOUSTIC INTELLIGENCE</p>
+            <h1>灵听 <em>环境声感知</em></h1>
+          </div>
+        </div>
+        <div id="model-pill" class="status-pill"><i></i><span>模型未加载</span></div>
+      </header>
+
+      <section class="hero-grid">
+        <article class="listen-card panel">
+          <div class="panel-heading">
+            <div>
+              <p class="kicker">LIVE INPUT</p>
+              <h2>听见此刻</h2>
+            </div>
+            <span id="timer" class="timer">00:00</span>
+          </div>
+
+          <canvas id="waveform" height="150" aria-label="实时音频波形"></canvas>
+          <div class="meter-row">
+            <span>环境声压</span>
+            <div class="meter"><b id="level"></b></div>
+            <strong id="level-text">-∞ dB</strong>
+          </div>
+
+          <div class="primary-actions">
+            <button id="record-btn" class="btn btn-primary">
+              <span class="record-dot"></span>监听 10 秒
+            </button>
+            <label class="btn btn-ghost" for="file-input">上传音频</label>
+            <button id="demo-btn" class="btn btn-ghost">运行演示样例</button>
+            <input id="file-input" type="file" accept="audio/*,.wav,.mp3,.m4a,.ogg" hidden />
+          </div>
+          <p class="microcopy">麦克风数据只在浏览器本机处理，不上传服务器。量化 AST 模型已随项目提供；演示样例同样走真实模型。</p>
+        </article>
+
+        <article class="result-card panel">
+          <div class="panel-heading">
+            <div>
+              <p class="kicker">MODEL OUTPUT</p>
+              <h2>识别结果</h2>
+            </div>
+            <span id="latency" class="latency">等待音频</span>
+          </div>
+
+          <div id="empty-result" class="empty-state">
+            <div class="radar"><i></i><i></i><i></i><b></b></div>
+            <p>监听一段声音，查看 AudioSet 事件分类</p>
+          </div>
+          <div id="predictions" class="predictions" hidden></div>
+        </article>
+      </section>
+
+      <section class="pipeline panel">
+        <div class="panel-heading compact">
+          <div>
+            <p class="kicker">PIPELINE</p>
+            <h2>论文链路落地</h2>
+          </div>
+          <span class="tag">16 kHz · Mono · 10 s</span>
+        </div>
+        <div class="steps">
+          <div class="step active"><span>01</span><b>音频采集</b><small>麦克风 / 文件</small></div>
+          <i></i>
+          <div class="step"><span>02</span><b>预处理</b><small>单声道 · 重采样 · 切片</small></div>
+          <i></i>
+          <div class="step"><span>03</span><b>AST 推理</b><small>AudioSet 527 类</small></div>
+          <i></i>
+          <div class="step"><span>04</span><b>场景唤醒</b><small>规则 · 阈值 · 日志</small></div>
+        </div>
+      </section>
+
+      <section class="lower-grid">
+        <article class="panel wake-panel">
+          <div class="panel-heading compact">
+            <div>
+              <p class="kicker">SCENE WAKE-UP</p>
+              <h2>场景唤醒</h2>
+            </div>
+            <label class="threshold">阈值 <strong id="threshold-value">0.25</strong>
+              <input id="threshold" type="range" min="0.05" max="0.80" value="0.25" step="0.05" />
+            </label>
+          </div>
+          <div id="rules" class="rules"></div>
+          <div id="wake-banner" class="wake-banner idle">
+            <span>●</span><div><b>系统待命</b><small>命中规则且超过阈值后触发提醒</small></div>
+          </div>
+        </article>
+
+        <article class="panel log-panel">
+          <div class="panel-heading compact">
+            <div>
+              <p class="kicker">EVENT LOG</p>
+              <h2>事件记录</h2>
+            </div>
+            <button id="clear-log" class="text-btn">清空</button>
+          </div>
+          <div id="event-log" class="event-log"></div>
+        </article>
+
+        <article class="panel adapt-panel">
+          <div class="panel-heading compact">
+            <div>
+              <p class="kicker">ADAPTATION BUFFER</p>
+              <h2>伪标签样本池</h2>
+            </div>
+            <strong id="sample-count" class="sample-count">0</strong>
+          </div>
+          <p>高置信度结果先进入本地样本池，人工复核后再用于微调，避免错误伪标签越学越偏。</p>
+          <div class="adapt-actions">
+            <button id="export-btn" class="btn btn-small">导出 JSON</button>
+            <button id="clear-samples" class="text-btn">清空样本</button>
+          </div>
+        </article>
+      </section>
+
+      <footer>
+        <span>DEMO 0.1 · PC VALIDATION</span>
+        <span>AST ONNX / Transformers.js / Web Audio API</span>
+      </footer>
+    </main>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>

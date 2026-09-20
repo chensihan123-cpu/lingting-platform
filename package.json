@@ -1,0 +1,27 @@
+{
+  "name": "lingting-audio-demo",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "setup:model": "node scripts/setup-model.mjs",
+    "dev": "vite --host 127.0.0.1",
+    "build": "vite build",
+    "preview": "vite preview --host 127.0.0.1",
+    "smoke:model": "node scripts/smoke-model.mjs",
+    "platform": "python platform/server.py",
+    "test:platform": "python -m unittest discover -s platform -p test_platform.py -v && node platform/test_frontend.mjs && node platform/test_map.mjs"
+  },
+  "dependencies": {
+    "@huggingface/transformers": "3.8.1",
+    "leaflet": "1.9.4",
+    "wavefile": "11.0.0"
+  },
+  "devDependencies": {
+    "linkedom": "^0.18.13",
+    "vite": "7.3.6"
+  },
+  "overrides": {
+    "sharp": "0.35.4"
+  }
+}
